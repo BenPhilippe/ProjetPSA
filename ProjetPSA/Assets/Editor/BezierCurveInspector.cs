@@ -5,6 +5,7 @@ using UnityEngine;
 public class BezierCurveInspector : Editor {
 
 	private const int lineSteps = 10;
+	private const float directionScale = .5f;
 
 	private BezierCurve curve;
 	private Transform handleTransform;
@@ -29,7 +30,7 @@ public class BezierCurveInspector : Editor {
 		//Draw curves
 		Vector3 lineStart = curve.GetPoint(0f);
 		Handles.color = Color.green;
-		Handles.DrawLine(lineStart, lineStart + curve.GetDirection(0f));
+		Handles.DrawLine(lineStart, lineStart + curve.GetDirection(0f) * directionScale);
 		for (int i = 1; i <= lineSteps; i++){
 			Vector3 lineEnd = curve.GetPoint(i/(float)lineSteps);
 			// Draw each portion of the curve
@@ -37,7 +38,7 @@ public class BezierCurveInspector : Editor {
 			Handles.DrawLine(lineStart, lineEnd);
 			// Draw the direction for each portion
 			Handles.color = Color.green;
-			Handles.DrawLine(lineEnd, lineEnd + curve.GetDirection(i / (float)lineSteps));
+			Handles.DrawLine(lineEnd, lineEnd + curve.GetDirection(i / (float)lineSteps) * directionScale);
 			lineStart = lineEnd;
 		}
 	}
