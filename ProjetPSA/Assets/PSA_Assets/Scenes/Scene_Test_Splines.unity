@@ -329,9 +329,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   points:
-  - {x: 0, y: 0, z: 2.0887997}
-  - {x: 4.0148764, y: 0, z: -0.047222853}
-  - {x: 5.6951337, y: 0, z: 5.436308}
+  - {x: 1, y: 1, z: 0}
+  - {x: 1, y: -1, z: 3}
+  - {x: 5, y: 1.7630572, z: 3}
+  - {x: 5, y: 0, z: 0}
 --- !u!4 &1807336040
 Transform:
   m_ObjectHideFlags: 0
