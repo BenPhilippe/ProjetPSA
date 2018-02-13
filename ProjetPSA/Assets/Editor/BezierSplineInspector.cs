@@ -5,7 +5,10 @@ using UnityEngine;
 public class BezierSplineInspector : Editor {
 
 	private const int stepsPerCurve = 10;
-	private const float directionScale = .5f;
+	private const float directionScale = .8f;
+	private const float handleSize = .04f;
+	private const float pickSize = .06f;
+	private int selectedIndex = -1;
 
 	private BezierSpline spline;
 	private Transform handleTransform;
@@ -49,13 +52,19 @@ public class BezierSplineInspector : Editor {
 
 	private Vector3 ShowPoint(int index){
 		Vector3 point = handleTransform.TransformPoint(spline.points[index]);
-
-		EditorGUI.BeginChangeCheck();
-		point = Handles.DoPositionHandle(point, handleRotation);
-		if(EditorGUI.EndChangeCheck()){
-			Undo.RecordObject(spline, "Move Point");
-			EditorUtility.SetDirty(spline);
-			spline.points[index] = handleTransform.InverseTransformPoint(point);
+		float size = HandleUtility.GetHandleSize(point);
+		Handles.color = Color.white;
+		if(Handles.Button(point, handleRotation, size * handleSize, size * pickSize, Handles.DotHandleCap)){
+			selectedIndex = index;
+		}
+		if(selectedIndex == index){
+			EditorGUI.BeginChangeCheck();
+			point = Handles.DoPositionHandle(point, handleRotation);
+			if(EditorGUI.EndChangeCheck()){
+				Undo.RecordObject(spline, "Move Point");
+				EditorUtility.SetDirty(spline);
+				spline.points[index] = handleTransform.InverseTransformPoint(point);
+			}
 		}
 
 		return point;
