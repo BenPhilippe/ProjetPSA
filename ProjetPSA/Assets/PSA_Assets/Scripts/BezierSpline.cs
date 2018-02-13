@@ -2,7 +2,32 @@
 using System;
 
 public class BezierSpline : MonoBehaviour {
+	[SerializeField]
 	public Vector3[] points;
+	[SerializeField]
+	private BezierControlPointMode[] modes;
+	public int ControlPointCount{
+		get{
+			return points.Length;
+		}
+	}
+
+	public Vector3 GetControlPoint (int index){
+		return points[index];
+	}
+
+	public BezierControlPointMode GetControlPointMode(int index){
+		return modes[(index + 1) / 3];
+	}
+
+	public void SetControlPoint(int index, Vector3 point){
+		points[index] = point;
+	}
+
+	public void SetControlPointMode(int index, BezierControlPointMode mode){
+		modes[(index + 1) / 3] = mode;
+	}
+
 	public int CurveCount{
 		get{
 			return (points.Length - 1) / 3;
@@ -15,6 +40,10 @@ public class BezierSpline : MonoBehaviour {
 			new Vector3(2f, 0f, 0f),
 			new Vector3(3f, 0f, 0f),
 			new Vector3(4f, 0f, 0f),
+		};
+		modes = new BezierControlPointMode[]{
+			BezierControlPointMode.Free,
+			BezierControlPointMode.Free
 		};
 	}
 
@@ -70,5 +99,8 @@ public class BezierSpline : MonoBehaviour {
 		points[points.Length - 2] = point;
 		point.x += 1f;
 		points[points.Length - 1] = point;
+
+		Array.Resize(ref modes, modes.Length +1);
+		modes[modes.Length - 1] = modes[modes.Length - 2];
 	}
 }
