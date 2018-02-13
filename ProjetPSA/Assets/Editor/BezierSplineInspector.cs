@@ -4,7 +4,7 @@ using UnityEngine;
 [CustomEditor(typeof(BezierSpline))]
 public class BezierSplineInspector : Editor {
 
-	private const int lineSteps = 10;
+	private const int stepsPerCurve = 10;
 	private const float directionScale = .5f;
 
 	private BezierSpline spline;
@@ -20,15 +20,16 @@ public class BezierSplineInspector : Editor {
 		Vector3 p0 = ShowPoint(0);
 		for (int i = 1; i < spline.points.Length; i += 3)
 		{
-			Vector3 p1 = ShowPoint(1);
-			Vector3 p2 = ShowPoint(2);
-			Vector3 p3 = ShowPoint(3);
+			Vector3 p1 = ShowPoint(i);
+			Vector3 p2 = ShowPoint(i + 1);
+			Vector3 p3 = ShowPoint(i + 2);
 
 			//Draw control lines
 			Handles.color = Color.gray;
 			Handles.DrawLine(p0, p1);
 			Handles.DrawLine(p2, p3);
 			Handles.DrawBezier(p0, p3, p1, p2, Color.white, null, 2f);
+			p0 = p3;
 		}
 
 		ShowDirections();
@@ -38,10 +39,11 @@ public class BezierSplineInspector : Editor {
 		Handles.color = Color.green;
 		Vector3 point = spline.GetPoint(0f);
 		Handles.DrawLine(point, point + spline.GetDirection(0f) * directionScale);
-		for (int i = 1; i <= lineSteps; i++)
+		int steps = stepsPerCurve * spline.CurveCount;
+		for (int i = 1; i <= steps; i++)
 		{
-			point = spline.GetPoint(i / (float)lineSteps);
-			Handles.DrawLine(point, point + spline.GetDirection(i / (float)lineSteps) * directionScale);
+			point = spline.GetPoint(i / (float)steps);
+			Handles.DrawLine(point, point + spline.GetDirection(i / (float)steps) * directionScale);
 		}
 	}
 

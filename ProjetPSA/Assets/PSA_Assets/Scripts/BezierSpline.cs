@@ -3,6 +3,11 @@ using System;
 
 public class BezierSpline : MonoBehaviour {
 	public Vector3[] points;
+	public int CurveCount{
+		get{
+			return (points.Length - 1) / 3;
+		}
+	}
 
 	public void Reset(){
 		points = new Vector3[]{
@@ -17,16 +22,38 @@ public class BezierSpline : MonoBehaviour {
 		//quadratic
 		//return transform.TransformPoint(Bezier.GetPoint(points[0], points[1], points[2], t));
 		
+		int i;
+		if(t >= 1f){
+			t = 1f;
+			i = points.Length -4;
+		}else{
+			t = Mathf.Clamp01(t) * CurveCount;
+			i = (int)t;
+			t -= i;
+			i *= 3;
+		}
+
 		//cubic
-		return transform.TransformPoint(Bezier.GetPoint(points[0], points[1], points[2], points[3], t));
+		return transform.TransformPoint(Bezier.GetPoint(points[i], points[i + 1], points[i + 2], points[i + 3], t));
 	}
 
 	public Vector3 GetVelocity (float t){
 		//quadratic
 		//return transform.TransformPoint(Bezier.GetFirstDerivative(points[0], points[1], points[2], t)) - transform.position;
 		
+		int i;
+		if(t >= 1f){
+			t = 1f;
+			i = points.Length -4;
+		}else{
+			t = Mathf.Clamp01(t) * CurveCount;
+			i = (int)t;
+			t -= i;
+			i *= 3;
+		}
+
 		//cubic
-		return transform.TransformPoint(Bezier.GetFirstDerivative(points[0], points[1], points[2], points[3], t))
+		return transform.TransformPoint(Bezier.GetFirstDerivative(points[i], points[i + 1], points[i + 2], points[i + 3], t))
 				 - transform.position;
 	}
 
