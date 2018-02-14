@@ -10,6 +10,12 @@ public class BezierSplineInspector : Editor {
 	private const float pickSize = .06f;
 	private int selectedIndex = -1;
 
+	private static Color[] modeColors = {
+		Color.white,
+		Color.yellow,
+		Color.cyan
+	};
+
 	private BezierSpline spline;
 	private Transform handleTransform;
 	private Quaternion handleRotation;
@@ -54,11 +60,14 @@ public class BezierSplineInspector : Editor {
 	private Vector3 ShowPoint(int index){
 		Vector3 point = handleTransform.TransformPoint(spline.GetControlPoint(index));
 		float size = HandleUtility.GetHandleSize(point);
-		if(index > 0){
+		//First point has different color
+		/*if(index > 0){
 			Handles.color = Color.white;
 		}else{
 			Handles.color = Color.yellow;
-		}
+		}*/
+
+		Handles.color = modeColors[(int)spline.GetControlPointMode(index)];
 		if(Handles.Button(point, handleRotation, size * handleSize, size * pickSize, Handles.DotHandleCap)){
 			selectedIndex = index;
 			Repaint();
@@ -79,6 +88,15 @@ public class BezierSplineInspector : Editor {
 	public override void OnInspectorGUI(){
 		//DrawDefaultInspector();
 		spline = target as BezierSpline;
+
+		EditorGUI.BeginChangeCheck();
+		bool loop = EditorGUILayout.Toggle("Loop", spline.Loop);
+		if(EditorGUI.EndChangeCheck()){
+			Undo.RecordObject(spline, "Toggle Loop");
+			EditorUtility.SetDirty(spline);
+			spline.loop = loop;
+		}
+
 		if(selectedIndex >= 0 && selectedIndex < spline.ControlPointCount){
 			DrawSelectedPointInspector();
 		}
@@ -91,6 +109,7 @@ public class BezierSplineInspector : Editor {
 
 	private void DrawSelectedPointInspector(){
 		GUILayout.Label("Selected Point");
+
 		EditorGUI.BeginChangeCheck();
 		Vector3 point = EditorGUILayout.Vector3Field("Position", spline.GetControlPoint(selectedIndex));
 		if(EditorGUI.EndChangeCheck()){
@@ -98,6 +117,7 @@ public class BezierSplineInspector : Editor {
 			EditorUtility.SetDirty(spline);
 			spline.SetControlPoint(selectedIndex, point);
 		}
+
 		EditorGUI.BeginChangeCheck();
 		BezierControlPointMode mode = (BezierControlPointMode)
 			EditorGUILayout.EnumPopup("Mode", spline.GetControlPointMode(selectedIndex));
