@@ -63,6 +63,11 @@ public class BezierSplineInspector : Editor {
 		//First point has different size
 		if(index == 0){
 			size *= 2f;
+		}else{
+			//Mid point also has different size
+			if(index % 3 == 0){
+				size *= 1.5f;
+			}
 		}
 		Handles.color = modeColors[(int)spline.GetControlPointMode(index)];
 		if(Handles.Button(point, handleRotation, size * handleSize, size * pickSize, Handles.DotHandleCap)){
