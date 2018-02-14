@@ -39,11 +39,30 @@ public class BezierSpline : MonoBehaviour {
 		// Also moves control points if middle one is selected 
 		if(index % 3 == 0){
 			Vector3 delta = point - points[index];
-			if(index > 0){
-				points[index - 1] += delta;
-			}
-			if(index + 1 < points.Length){
-				points[index + 1] += delta;
+
+			// Moves last and first if spline is looped
+			if(loop){
+				//First point
+				if(index == 0){
+					points[1] += delta;
+					points[points.Length - 2] += delta;
+					points[points.Length - 1] = point;
+				// Last point
+				}else if (index == points.Length -1){
+					points[0] = delta;
+					points[1] += delta;
+					points[index - 1] += delta;
+				}else{
+					points[index - 1] += delta;
+					points[index + 1] += delta;
+				}
+			}else{
+				if(index > 0){
+					points[index - 1] += delta;
+				}
+				if(index + 1 < points.Length){
+					points[index + 1] += delta;
+				}
 			}
 		}
 		points[index] = point;
@@ -51,7 +70,18 @@ public class BezierSpline : MonoBehaviour {
 	}
 
 	public void SetControlPointMode(int index, BezierControlPointMode mode){
-		modes[(index + 1) / 3] = mode;
+		int modeIndex = (index + 1) / 3;
+		modes[modeIndex] = mode;
+
+		if(loop){
+			// Set mode of first point same as last / last same as first
+			if(modeIndex == 0){
+				modes[modes.Length - 1] = mode;
+			} else if(modeIndex == modes.Length -1){
+				modes[0] = mode;
+			}
+		}
+
 		EnforceMode(index);
 	}
 
@@ -130,6 +160,13 @@ public class BezierSpline : MonoBehaviour {
 		Array.Resize(ref modes, modes.Length +1);
 		modes[modes.Length - 1] = modes[modes.Length - 2];
 		EnforceMode(points.Length - 4);
+
+		//Make sure it stays a loop whe adding a curve to the spline
+		if(loop){
+			points[points.Length - 1] = points[0];
+			modes[modes.Length - 1] = modes[0];
+			EnforceMode(0);
+		}
 	}
 
 	private void EnforceMode(int index){
@@ -145,11 +182,17 @@ public class BezierSpline : MonoBehaviour {
 		int middleIndex = modeIndex * 3;
 		int fixedIndex, enforcedIndex;
 		if(index <= middleIndex){
-			fixedIndex = middleIndex -1;
-			enforcedIndex = middleIndex +1;
+			fixedIndex = middleIndex - 1;
+			if(fixedIndex < 0){
+				fixedIndex = points.Length - 2;
+			}
+			enforcedIndex = middleIndex + 1;
+			if(enforcedIndex >= points.Length){
+				enforcedIndex = 1;
+			}
 		}else{
-			fixedIndex = middleIndex +1;
-			enforcedIndex = middleIndex -1;
+			fixedIndex = middleIndex + 1;
+			enforcedIndex = middleIndex - 1;
 		}
 
 		//Mirrored
