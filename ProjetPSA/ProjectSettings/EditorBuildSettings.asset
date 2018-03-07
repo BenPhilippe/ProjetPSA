@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/PSA_Assets/Scenes/_preload.unity
+    guid: a3a7a9b166a829343a4cc5e9ebd4d7d1
+  - enabled: 1
+    path: Assets/PSA_Assets/Scenes/Scene_Test_UI2.unity
+    guid: f4d38cad9bc61d9438e0e3c66a8d0c5b
