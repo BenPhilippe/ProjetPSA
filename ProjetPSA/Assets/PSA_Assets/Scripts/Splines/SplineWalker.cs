@@ -3,35 +3,52 @@
 public class SplineWalker : MonoBehaviour {
 	public BezierSpline splineToFollow;
 	public float duration;
+	[Range(0f, 5f)]
+	public float speed = .15f;
+
 	public bool lookForward;
+	public bool isUsingDuration = true;
 	private bool goingForward = false;
 	public SplineWalkerMode mode;
 	[Range(0f, 1f)]
-	public float progress;
+	public float t;	// Spline progress value
+
 	private void Update() {
+
+		Vector3 previousPosition = transform.position;
+
 		if(goingForward){
-			progress += Time.deltaTime / duration;
-			if(progress > 1f){
+			if(isUsingDuration){
+				t += Time.deltaTime / duration;
+			} else{
+				t += Time.deltaTime * speed;
+			}
+			if(t > 1f){
 				if(mode == SplineWalkerMode.Once){
-					progress = 1f;
+					t = 1f;
 				} else if (mode == SplineWalkerMode.Loop){
-					progress -= 1f;
+					t -= 1f;
 				} else {
-					progress = 2f - progress;
+					t = 2f - t;
 					goingForward = false;
 				}
 			}
 		} else {
-			progress -= Time.deltaTime / duration;
-			if(progress < 0f){
-				progress -= progress;
+			if(isUsingDuration){
+				t -= Time.deltaTime / duration;
+			} else {
+				t -= Time.deltaTime * speed;
+			}
+			if(t < 0f){
+				t -= t;
 				goingForward = true;
 			}
 		}
-		Vector3 position = splineToFollow.GetPoint(progress);
+		Vector3 position = splineToFollow.GetPoint(t);
 		transform.localPosition = position;
+
 		if(lookForward){
-			transform.LookAt(position + splineToFollow.GetDirection(progress));
+			transform.LookAt(position + splineToFollow.GetDirection(t));
 		}
 	}
 }

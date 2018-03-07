@@ -190,7 +190,6 @@ GameObject:
   - component: {fileID: 250324884}
   - component: {fileID: 250324883}
   - component: {fileID: 250324882}
-  - component: {fileID: 250324886}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -265,18 +264,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &250324886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114176617035844280, guid: 8e2e9d105dfcefc449130327077bc366,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 250324881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fd70e586ced8d044bfaeebb5e5b71d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &615091297
 Prefab:
   m_ObjectHideFlags: 0
@@ -411,6 +398,16 @@ Prefab:
       propertyPath: splineToFollow
       value: 
       objectReference: {fileID: 980536019}
+    - target: {fileID: 114871506979650384, guid: 8e2e9d105dfcefc449130327077bc366,
+        type: 2}
+      propertyPath: duration
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114871506979650384, guid: 8e2e9d105dfcefc449130327077bc366,
+        type: 2}
+      propertyPath: mode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e2e9d105dfcefc449130327077bc366, type: 2}
   m_IsPrefabParent: 0
