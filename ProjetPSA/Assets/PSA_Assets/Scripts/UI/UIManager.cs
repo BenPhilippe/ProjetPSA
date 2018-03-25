@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour {
 
 	public GameManager GM;
 	public TestData currentTestData;
+	public bool hasAlreadyAddedData = false;
 
 	public Text GM_Test_Text;
 
@@ -19,6 +20,13 @@ public class UIManager : MonoBehaviour {
 		GM = Object.FindObjectOfType<GameManager>();
 		ChangeConfigPanel();
 		ChangeButtonsState();
+
+		currentTestData.ID = GM.numberOfTestsDone +1;
+		currentTestData.distanceToCarCrash = Random.Range(15f, 100f);
+		currentTestData.testDuration = Random.Range(2f, 60f);
+		currentTestData.s = "blah";
+
+		hasAlreadyAddedData = false;
 	}
 
 	private void Update() {
@@ -49,9 +57,14 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void AddCurrentTestData(){
-		if(!GM.testDataList.Contains(currentTestData)){
-			GM.testDataList.Add(currentTestData);
+		if(GM != null){
+			if(!GM.testDataList.Contains(currentTestData) && !hasAlreadyAddedData){
+				GM.testDataList.Add(currentTestData);
+				hasAlreadyAddedData = true;
+			}
+			GM.numberOfTestsDone ++;
 		}
+		
 	}
 
 	public void PreviousConfigPanel(){
